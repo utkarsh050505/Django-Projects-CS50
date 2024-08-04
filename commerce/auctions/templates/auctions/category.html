@@ -1,0 +1,23 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="{% url 'category' %}" method="post" class="mt-5">
+                {% csrf_token %}
+                <h3 class="text-center mb-3">Explore our diverse collection and find the perfect category for your needs.</h3>
+                <div class="form-group">
+                    <select name="category" class="form-control">
+                        <option disabled selected>Select</option>
+                        {% for category in categories %}
+                        <option value="{{ category.category_type }}">{{ category.category_type }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block mt-3">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

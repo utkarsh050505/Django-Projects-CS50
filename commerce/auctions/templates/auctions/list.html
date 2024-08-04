@@ -1,0 +1,86 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+<div class="container mt-4">
+    <h2 class="mb-4">Listing: {{ List.name }}</h2>
+
+    {% if user.is_authenticated %}
+        {% if isListinginWatchlist %}
+            <form action="{% url 'removeWatchlist' id=List.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger">Remove From Watchlist</button>
+            </form>
+        {% else %}
+            <form action="{% url 'addWatchlist' id=List.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-success">Add To Watchlist</button>
+            </form>
+        {% endif %}
+    {% endif %}
+
+    <div class="container my-4" style="background-color: #FFFDE2; padding: 20px;">
+        <img src="{{ List.image }}" class="mx-auto d-block img-fluid mb-4" style="max-width: 25%;">
+        <p class="text-center"><strong>{{ List.description }}</strong></p>
+        <h2 class="text-center mb-4">Current Price: ${{ List.price }}</h2>
+        <h4>{{ warning }}</h4>
+
+        {% if user.is_authenticated %}
+            {% if isOwner or not isInactive %}
+                <p>{{ Bid.number_of_bid }} Bids so far {{ message }}</p>
+            {% endif %}
+        {% endif %}
+
+        {% if user.is_authenticated %}
+            {% if isOwner %}
+                <div class="form-group mt-4">
+                    <form method="post" action="{% url 'closeAuction' id=List.id %}">
+                        {% csrf_token %}
+                        <button class="btn btn-danger">Close Auction</button>
+                    </form>
+                </div>
+            {% elif isInactive and List.owner is not None %}
+                <div class="form-group mt-4">
+                    <p>Auction has been closed by the Owner.</p>
+                    <h4>{{ List.winner }} has won the Bid!</h4>
+                </div>
+            {% elif isInactive and List.owner is None %}
+                <div class="form-group mt-4">
+                    <p>Auction has been closed by the Owner.</p>
+                    <h4>NO WINNER :/</h4>
+                </div>
+            {% else %}
+                <div class="form-group mt-4">
+                    <form method="POST" action="{% url 'id' id=List.id %}">
+                        {% csrf_token %}
+                        <input type="number" name="bid_amount" class="form-control" step="0.01" placeholder="Bid">
+                        <button type="submit" class="btn btn-primary mt-2">Place Bid</button>
+                        <input type="hidden" name="user" value="{{ user.username }}">
+                    </form>
+                </div>
+            {% endif %}
+        {% endif %}
+
+        <div class="mt-4">
+            <p><strong>Owner:</strong> {{ List.owner }}</p>
+            {% if Bid.highest_bidder %}
+                <p><strong>Highest Bidder:</strong> {{ Bid.highest_bidder }}</p>
+            {% endif %}
+        </div>
+
+        <div class="form-group mt-4">
+            <form method="post" action="{% url 'comments' id=List.id %}">
+                {% csrf_token %}
+                <input type="text" class="form-control" name="comment" placeholder="Add a Comment">
+                <button class="btn btn-primary mt-2" type="submit">Add Comment</button>
+            </form>
+        </div>
+
+        <div class="mt-4">
+            <h4>Comments</h4>
+            {% for comment in Comments %}
+                <p><strong>{{ comment.user_commenting }}:</strong> {{ comment.comment }}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

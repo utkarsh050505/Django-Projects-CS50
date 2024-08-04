@@ -1,0 +1,25 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <div class="row mx-3">
+        {% if listings %}
+            {% for listing in listings %}
+                <div class="card mx-3" style="width: 18rem; margin-top: 10px;">
+                    <img class="card-img-top" src="{{ listing.image }}" alt="Card image cap">
+                    <div class="card-body">
+                        <a href="{% url 'id' id=listing.id %}" style="text-decoration: none; color: black;">
+                        <h5 class="card-title">{{ listing.name }}</h5>
+                        <p class="card-text">{{ listing.description }}</p>
+                        <p>Price - <strong>${{ listing.price }}</strong></p>
+                        </a>
+                    </div>
+                </div>
+                <br>
+            {% endfor %}
+        {% else %}
+            <br>
+            <h1>No Listings Available...</h1>
+        {% endif %}
+    </div>
+{% endblock %}
