@@ -1,0 +1,42 @@
+{% extends "mail/layout.html" %}
+{% load static %}
+
+{% block body %}
+
+<div style="display: flex; align-items: center; justify-content: space-between; padding: 10px;">
+    <h2 style="font-size: 1.5rem; margin: 0;">{{ request.user.email }}</h2>
+    <div>
+        <button style="margin-right: 10px; font-size: 1rem; background-color: #007bff; color: #fff; border: 1px solid #007bff; padding: 8px 15px; border-radius: 5px;" class="btn btn-sm" id="inbox">Inbox</button>
+        <button style="margin-right: 10px; font-size: 1rem; background-color: #007bff; color: #fff; border: 1px solid #007bff; padding: 8px 15px; border-radius: 5px;" class="btn btn-sm" id="compose">Compose</button>
+        <button style="margin-right: 10px; font-size: 1rem; background-color: #007bff; color: #fff; border: 1px solid #007bff; padding: 8px 15px; border-radius: 5px;" class="btn btn-sm" id="sent">Sent</button>
+        <button style="margin-right: 10px; font-size: 1rem; background-color: #007bff; color: #fff; border: 1px solid #007bff; padding: 8px 15px; border-radius: 5px;" class="btn btn-sm" id="archived">Archived</button>
+        <a style="font-size: 1rem; background-color: #007bff; color: #fff; border: 1px solid #007bff; padding: 8px 15px; border-radius: 5px;" class="btn btn-sm" href="{% url 'logout' %}">Log Out</a>
+    </div>
+</div>
+<hr style="border: 1px solid #ddd; margin: 10px 0;">
+
+    <div id="emails-view">
+
+    </div>
+
+    <div id="compose-view">
+        <h3>New Email</h3>
+        <form id="compose-form">
+            <div class="form-group">
+                From: <input disabled id="sender" class="form-control" value="{{ request.user.email }}">
+            </div>
+            <div class="form-group">
+                To: <input id="compose-recipients" name="compose-recipients" class="form-control">
+            </div>
+            <div class="form-group">
+                <input class="form-control" id="compose-subject" name="compose-subject" placeholder="Subject">
+            </div>
+            <textarea class="form-control" id="compose-body" name="compose-body" placeholder="Body"></textarea>
+            <input type="submit" name="submit" id="submit" class="btn btn-primary"/>
+        </form>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script src="{% static 'mail/inbox.js' %}"></script>
+{% endblock %}

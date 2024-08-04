@@ -1,0 +1,50 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">{{ User.username }}</h4>
+                    <hr>
+                    {% if User.username != user.username %}
+                        <form method="post" action="{% url 'follow/unfollow' %}">
+                            {% if user in User.followers.all %}
+                            <button type="submit" class="btn btn-outline-secondary" style="margin-bottom: 15px;">Unfollow</button>
+                            {% else %}
+                            <button type="submit" class="btn btn-primary" style="margin-bottom: 15px;">Follow</button>
+                            {% endif %}
+                        <input type="hidden" name="person" value="{{ User.username }}">
+                        <input type="hidden" name="user_account" value="{{ user.username }}">
+                    </form>
+                    {% endif %}
+                    <div class="d-flex justify-content-around">
+                    <p class="card-text"><strong>Followers</strong>: {{ User.number_of_followers }}</p>
+                    <p class="card-text"><strong>Following</strong>: {{ User.number_of_following }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-8">
+            <h3>Posts</h3>
+            {% for post in User.user_posting.all %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div style="display: flex; flex-direction: row;">
+                        <h5 class="card-title">{{ post.title }}</h5>
+                        <small>{{ post.created_at }}</small>
+                        </div>
+                        <br>
+                        <p class="card-text">{{ post.content }}</p>
+                        <p class="card-text"><small class="text-muted">{{ post.timestamp }}</small></p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

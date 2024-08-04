@@ -1,0 +1,44 @@
+{% extends "network/layout.html" %}
+
+{% block body %}
+
+{% if user.is_authenticated %}
+<div class="container mt-4" id="new_post">
+            <div class="card">
+                <div class="card-header">
+                    {% if edit %}
+                    <h4 class="mb-0">Edit Post</h4>
+                    {% else %}
+                    <h4 class="mb-0">New Post</h4>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+
+                    {% if edit %}
+
+                    <form method="post" action="{% url 'do_edit' %}">
+                        <div class="form-group">
+                            <textarea class="form-control" name="content" rows="5" placeholder="Write your post here">{{ text }}</textarea>
+                        </div>
+                        <input type="hidden" name="user" value="{{ user.username }}">
+
+                        <input type="hidden" name="post_id" value="{{ id }}">
+                        <button type="submit" class="btn btn-primary">Edit</button>
+                    </form>
+
+                    {% else %}
+                    <form method="post" action="{% url 'new_post' %}">
+                        <div class="form-group">
+                            <textarea class="form-control" name="content" rows="5" placeholder="Write your post here"></textarea>
+                        </div>
+                        <input type="hidden" name="user" value="{{ user.username }}">
+                        <button type="submit" class="btn btn-primary">Post</button>
+                    </form>
+                    {% endif %}
+
+                </div>
+            </div>
+</div>
+{% endif %}
+
+{% endblock %}
